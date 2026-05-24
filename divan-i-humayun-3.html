@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Divan-ı Hümayun — Görev Takip</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c87a;
+    --gold-dim: #8a6e2e;
+    --bg: #0a0804;
+    --bg2: #100d08;
+    --col-bg: #120e09;
+    --card-bg: #1a1208;
+    --card-border: #2e2010;
+    --active-bg: #2a0a0a;
+    --active-border: #c9a84c;
+    --text-cream: #f0e6c8;
+    --text-dim: #7a6a4a;
+    --text-muted: #4a3e28;
+    --red-active: #8b1a1a;
+    --shadow-gold: 0 0 30px rgba(201,168,76,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-cream);
+    font-family: 'Crimson Pro', serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(201,168,76,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(139,26,26,0.06) 0%, transparent 60%),
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a84c' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* ── TUĞRA BAŞLIĞI ── */
+  .tugra-header {
+    text-align: center;
+    padding: 28px 20px 0;
+    position: relative;
+  }
+  .tugra-header::before, .tugra-header::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 30%;
+    height: 1px;
+    background: linear-gradient(to var(--dir, right), transparent, var(--gold-dim));
+  }
+  .tugra-header::before { left: 5%; --dir: right; }
+  .tugra-header::after  { right: 5%; --dir: left; }
+
+  .tugra-ornament {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 6px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .tugra-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(18px, 3vw, 28px);
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: 4px;
+    text-shadow: 0 0 40px rgba(201,168,76,0.4);
+  }
+  .tugra-subtitle {
+    font-family: 'Crimson Pro', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--text-dim);
+    margin-top: 4px;
+    letter-spacing: 2px;
+  }
+
+  /* ── SAAT GİRİŞ PANELİ ── */
+  .time-input-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px 20px;
+    flex-wrap: wrap;
+  }
+  .time-input-label {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+  }
+  .time-input {
+    background: var(--card-bg);
+    border: 1px solid var(--gold-dim);
+    color: var(--gold-light);
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    padding: 8px 14px;
+    width: 100px;
+    text-align: center;
+    outline: none;
+    letter-spacing: 2px;
+    transition: border-color 0.3s;
+  }
+  .time-input:focus { border-color: var(--gold); box-shadow: 0 0 10px rgba(201,168,76,0.2); }
+  .apply-btn {
+    background: linear-gradient(135deg, #2a1e08, #3d2c10);
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    padding: 9px 20px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s;
+  }
+  .apply-btn:hover {
+    background: linear-gradient(135deg, #3d2c10, #5a4018);
+    border-color: var(--gold);
+    box-shadow: 0 0 15px rgba(201,168,76,0.25);
+  }
+
+  /* ── AKTİF BANNER ── */
+  .active-banner {
+    margin: 0 16px 16px;
+    border: 1px solid var(--gold-dim);
+    background: linear-gradient(135deg, #1a1208, #120e06);
+    padding: 18px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .active-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .active-banner-inner {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .banner-crown {
+    font-size: 28px;
+    filter: drop-shadow(0 0 8px rgba(201,168,76,0.5));
+    flex-shrink: 0;
+  }
+  .banner-text { flex: 1; min-width: 200px; }
+  .banner-label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .banner-persona {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(16px, 2.5vw, 22px);
+    font-weight: 700;
+    color: var(--gold-light);
+    letter-spacing: 3px;
+    text-shadow: 0 0 20px rgba(201,168,76,0.4);
+  }
+  .banner-time {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 3px;
+    font-style: italic;
+  }
+  .banner-task {
+    font-size: 14px;
+    color: var(--text-cream);
+    margin-top: 6px;
+    font-style: italic;
+    opacity: 0.85;
+  }
+  .banner-divider {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent);
+    flex-shrink: 0;
+  }
+  .banner-clock {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(22px, 3vw, 32px);
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-shadow: 0 0 20px rgba(201,168,76,0.3);
+    flex-shrink: 0;
+  }
+  .no-active {
+    font-style: italic;
+    color: var(--text-dim);
+    font-size: 14px;
+  }
+
+  /* ── BÖLÜCÜ ÇİZGİ ── */
+  .divider {
+    margin: 0 16px 16px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-dim), var(--gold), var(--gold-dim), transparent);
+    position: relative;
+  }
+  .divider::before {
+    content: '☽ ✦ ☽';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--bg);
+    padding: 0 12px;
+    font-size: 10px;
+    color: var(--gold-dim);
+    letter-spacing: 4px;
+  }
+
+  /* ── ANA SÜTUN ALANI ── */
+  .columns-wrapper {
+    overflow-x: auto;
+    padding: 0 8px 80px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .columns-container {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(280px, 1fr));
+    gap: 12px;
+    min-width: 860px;
+  }
+
+  .column {
+    background: var(--col-bg);
+    border: 1px solid var(--card-border);
+    border-top: 2px solid var(--gold-dim);
+    display: flex;
+    flex-direction: column;
+  }
+  .column-header {
+    padding: 14px 12px 10px;
+    text-align: center;
+    background: linear-gradient(to bottom, rgba(201,168,76,0.07), transparent);
+    border-bottom: 1px solid var(--card-border);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    backdrop-filter: blur(4px);
+  }
+  .column-title {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .column-subtitle {
+    font-size: 11px;
+    font-style: italic;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* ── PERSONA SATIRI ── */
+  .persona-row {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(46,32,16,0.6);
+    cursor: default;
+    transition: background 0.3s, opacity 0.5s;
+    position: relative;
+  }
+  .persona-row:last-child { border-bottom: none; }
+
+  .persona-row.past {
+    opacity: 0.35;
+  }
+  .persona-row.past .persona-name { text-decoration: line-through; text-decoration-color: var(--text-muted); }
+
+  .persona-row.active {
+    background: var(--active-bg);
+    border-left: 3px solid var(--gold);
+    padding-left: 9px;
+    box-shadow: inset 0 0 30px rgba(139,26,26,0.3), var(--shadow-gold);
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: inset 0 0 30px rgba(139,26,26,0.3), 0 0 20px rgba(201,168,76,0.1); }
+    50%       { box-shadow: inset 0 0 40px rgba(139,26,26,0.5), 0 0 30px rgba(201,168,76,0.2); }
+  }
+
+  .persona-inner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .persona-time {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    color: var(--gold-dim);
+    letter-spacing: 1px;
+    min-width: 38px;
+    flex-shrink: 0;
+  }
+  .persona-row.active .persona-time { color: var(--gold); }
+
+  .persona-name-wrapper {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
+  }
+  .persona-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to var(--d, right), transparent, var(--gold-dim));
+    opacity: 0.5;
+  }
+  .persona-line.left { --d: right; }
+  .persona-line.right { --d: left; }
+
+  .persona-name {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--text-cream);
+    white-space: nowrap;
+    transition: color 0.3s;
+  }
+  .persona-row.active .persona-name { color: var(--gold-light); text-shadow: 0 0 10px rgba(201,168,76,0.4); }
+
+  .edit-btn {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 11px;
+    padding: 2px 5px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .edit-btn:hover { color: var(--gold); border-color: var(--gold-dim); }
+
+  .persona-task-preview {
+    font-size: 11px;
+    font-style: italic;
+    color: var(--text-dim);
+    margin-top: 3px;
+    padding-left: 46px;
+    padding-right: 24px;
+    opacity: 0.8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .persona-row.active .persona-task-preview { color: var(--text-cream); opacity: 1; }
+
+  /* ── DÜZENLEME MODALİ (BOTTOM SHEET) ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .bottom-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    background: linear-gradient(to top, #1a1208, #120e08);
+    border-top: 2px solid var(--gold-dim);
+    border-left: 1px solid var(--card-border);
+    border-right: 1px solid var(--card-border);
+    padding: 24px 24px 32px;
+    z-index: 101;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .bottom-sheet.open { transform: translateY(0); }
+
+  .sheet-handle {
+    width: 40px;
+    height: 3px;
+    background: var(--gold-dim);
+    border-radius: 2px;
+    margin: 0 auto 16px;
+  }
+  .sheet-title {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .sheet-persona {
+    font-family: 'Cinzel', serif;
+    font-size: 18px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--card-border);
+  }
+  .sheet-textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--gold-dim);
+    color: var(--text-cream);
+    font-family: 'Crimson Pro', serif;
+    font-size: 15px;
+    padding: 12px;
+    resize: vertical;
+    min-height: 90px;
+    outline: none;
+    transition: border-color 0.3s;
+    line-height: 1.6;
+  }
+  .sheet-textarea:focus { border-color: var(--gold); }
+  .sheet-textarea::placeholder { color: var(--text-muted); font-style: italic; }
+
+  .sheet-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+    justify-content: flex-end;
+  }
+  .sheet-cancel {
+    background: none;
+    border: 1px solid var(--text-muted);
+    color: var(--text-dim);
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    padding: 9px 18px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .sheet-cancel:hover { border-color: var(--text-dim); color: var(--text-cream); }
+
+  .sheet-save {
+    background: linear-gradient(135deg, #2a1e08, #4a3010);
+    border: 1px solid var(--gold);
+    color: var(--gold-light);
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    padding: 9px 22px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s;
+  }
+  .sheet-save:hover {
+    background: linear-gradient(135deg, #4a3010, #6a4818);
+    box-shadow: 0 0 20px rgba(201,168,76,0.3);
+  }
+
+  /* ── SES KONTROL PANELİ ── */
+  .sound-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 0 20px 14px;
+    flex-wrap: wrap;
+  }
+  .sound-label {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+  }
+  .sound-toggle {
+    background: var(--card-bg);
+    border: 1px solid var(--gold-dim);
+    color: var(--text-dim);
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 7px 16px;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sound-toggle.on {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: linear-gradient(135deg, #2a1e08, #3d2c10);
+    box-shadow: 0 0 10px rgba(201,168,76,0.15);
+  }
+  .sound-select {
+    background: var(--card-bg);
+    border: 1px solid var(--gold-dim);
+    color: var(--gold-light);
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 7px 10px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.25s;
+  }
+  .sound-select:focus { border-color: var(--gold); }
+  .sound-select option { background: #1a1208; }
+  .sound-preview-btn {
+    background: none;
+    border: 1px solid var(--text-muted);
+    color: var(--text-dim);
+    font-size: 14px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .sound-preview-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+  .banner-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .banner-countdown-wrap {
+    text-align: center;
+  }
+  .banner-countdown-label {
+    font-family: 'Cinzel', serif;
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .banner-countdown {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(16px, 2.2vw, 22px);
+    color: var(--gold-light);
+    letter-spacing: 2px;
+    text-shadow: 0 0 15px rgba(201,168,76,0.35);
+  }
+  .banner-countdown.urgent {
+    color: #e05050;
+    text-shadow: 0 0 15px rgba(224,80,80,0.4);
+    animation: blink-urgent 1s ease-in-out infinite;
+  }
+  @keyframes blink-urgent {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  /* Satır içi zamanlayıcı */
+  .row-countdown {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-top: 4px;
+    padding-left: 46px;
+    opacity: 0.9;
+  }
+  .row-countdown.urgent { color: #e05050; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- TUĞRA BAŞLIĞI -->
+<div class="tugra-header">
+  <div class="tugra-ornament">✦ Saltanat-ı Seniyye ✦</div>
+  <div class="tugra-title">DİVAN-I HÜMAYUN</div>
+  <div class="tugra-subtitle">Görev Takip Sicili</div>
+</div>
+
+<!-- SAAT GİRİŞ PANELİ -->
+<div class="time-input-panel">
+  <span class="time-input-label">Başlangıç Saati</span>
+  <input type="text" class="time-input" id="startTimeInput" placeholder="SS:DD" maxlength="5">
+  <button class="apply-btn" onclick="applyStartTime()">⚔ Uygula</button>
+</div>
+
+<!-- SES KONTROL PANELİ -->
+<div class="sound-panel">
+  <span class="sound-label">Geçiş Sesi</span>
+  <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔇 Kapalı</button>
+  <select class="sound-select" id="soundSelect" onchange="onSoundChange()">
+    <option value="ting">Ting (Kristal)</option>
+    <option value="bell">Çan (Derin)</option>
+    <option value="gong">Gong (Osmanlı)</option>
+    <option value="chime">Nefes (Soft)</option>
+  </select>
+  <button class="sound-preview-btn" onclick="previewSound()" title="Önizle">▶</button>
+</div>
+
+<!-- AKTİF BANNER -->
+<div class="active-banner" id="activeBanner">
+  <div class="active-banner-inner">
+    <div class="banner-crown">☽</div>
+    <div class="banner-text">
+      <div class="banner-label">Şu An Görevde</div>
+      <div class="banner-persona" id="bannerPersona">—</div>
+      <div class="banner-time" id="bannerTime"></div>
+      <div class="banner-task" id="bannerTask"></div>
+    </div>
+    <div class="banner-divider"></div>
+    <div class="banner-right">
+      <div class="banner-clock" id="liveClock">--:--</div>
+      <div class="banner-countdown-wrap" id="bannerCountdownWrap">
+        <div class="banner-countdown-label">Kalan Süre</div>
+        <div class="banner-countdown" id="bannerCountdown">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SÜTUNLAR -->
+<div class="columns-wrapper">
+  <div class="columns-container" id="columnsContainer"></div>
+</div>
+
+<!-- DÜZENLEME MODALİ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeSheet()"></div>
+<div class="bottom-sheet" id="bottomSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title">Görev Emri</div>
+  <div class="sheet-persona" id="sheetPersonaName">—</div>
+  <textarea class="sheet-textarea" id="sheetTextarea" placeholder="Görevi buraya yazın..."></textarea>
+  <div class="sheet-buttons">
+    <button class="sheet-cancel" onclick="closeSheet()">İptal</button>
+    <button class="sheet-save" onclick="saveTask()">⚔ Ferman Eyle</button>
+  </div>
+</div>
+
+<script>
+// ── VERİ ──
+const COLUMNS = [
+  {
+    title: "HZ. ÖMER — ZÜBEYDE",
+    subtitle: "Birinci Sütun",
+    personas: [
+      { name: "SELÇUK",       offset: 0 },
+      { name: "TUĞRUL",       offset: 5 },
+      { name: "ALPARSLAN GAZİ", offset: 10 },
+      { name: "MELİKŞAH",    offset: 15 },
+      { name: "SENCER",       offset: 20 },
+      { name: "AKÇA",         offset: 25 },
+      { name: "SEFERİYE",     offset: 30 },
+      { name: "ZÜBEYDE",      offset: 35 },
+      { name: "TERKEN",       offset: 40 },
+    ]
+  },
+  {
+    title: "ALPARSLAN — TURGUT",
+    subtitle: "İkinci Sütun",
+    personas: [
+      { name: "ERTUĞRUL",     offset: 45 },
+      { name: "OSMAN GAZİ",   offset: 50 },
+      { name: "ORHAN GAZİ",   offset: 55 },
+      { name: "ALADDİN",      offset: 60 },
+      { name: "RABİA BALA",   offset: 65 },
+      { name: "MALHUN",       offset: 70 },
+      { name: "FATMA",        offset: 75 },
+      { name: "HALİME",       offset: 80 },
+      { name: "NİLÜFER",      offset: 85 },
+      { name: "GONCA",        offset: 90 },
+    ]
+  },
+  {
+    title: "OSMAN — ZAĞANOS",
+    subtitle: "Üçüncü Sütun",
+    personas: [
+      { name: "2. MURAD HAN",               offset: 95 },
+      { name: "FATİH SULTAN MEHMED HAN",     offset: 100 },
+      { name: "2. BAYEZİD",                  offset: 105 },
+      { name: "YAVUZ SULTAN SELİM HAN",      offset: 110 },
+      { name: "KANUNİ S. SÜLEYMAN HAN",      offset: 115 },
+      { name: "4. MURAD HAN",                offset: 120 },
+      { name: "ABDÜLHAMİD HAN",              offset: 125 },
+      { name: "HÜMA",                        offset: 135 },
+      { name: "HALİME",                      offset: 145 },
+      { name: "GÜLBAHAR",                    offset: 155 },
+      { name: "GÜLŞAH",                      offset: 165 },
+      { name: "ÇİÇEK",                       offset: 175 },
+      { name: "BİDAR",                       offset: 185 },
+      { name: "SALİHA",                      offset: 195 },
+    ]
+  }
+];
+
+// ── DURUM ──
+let startMinutes = null;
+let editingKey = null;
+let tasks = JSON.parse(localStorage.getItem('divan_tasks') || '{}');
+let lastActiveKey = null;
+let soundEnabled = localStorage.getItem('divan_sound') === 'on';
+let soundType = localStorage.getItem('divan_sound_type') || 'ting';
+
+// ── SES MOTORU (Web Audio API) ──
+let audioCtx = null;
+
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playSoundType(type) {
+  const ctx = getAudioCtx();
+  const master = ctx.createGain();
+  master.connect(ctx.destination);
+
+  const now = ctx.currentTime;
+
+  if (type === 'ting') {
+    // Kristal ting — yüksek frekanslı, hızlı sönüm
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(master);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(2200, now);
+    osc.frequency.exponentialRampToValueAtTime(1800, now + 0.15);
+    gain.gain.setValueAtTime(0.0, now);
+    gain.gain.linearRampToValueAtTime(0.35, now + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
+    osc.start(now); osc.stop(now + 1.5);
+    // İnce harmonik
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.connect(gain2); gain2.connect(master);
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(4400, now);
+    gain2.gain.setValueAtTime(0.0, now);
+    gain2.gain.linearRampToValueAtTime(0.12, now + 0.005);
+    gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+    osc2.start(now); osc2.stop(now + 0.7);
+
+  } else if (type === 'bell') {
+    // Derin çan — düşük frekanslı, uzun sönüm
+    [220, 440, 660].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(master);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+      const vol = [0.3, 0.15, 0.08][i];
+      gain.gain.setValueAtTime(0.0, now);
+      gain.gain.linearRampToValueAtTime(vol, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.0);
+      osc.start(now); osc.stop(now + 3.2);
+    });
+
+  } else if (type === 'gong') {
+    // Gong — gürültülü başlangıç + uzun yankı
+    const bufSize = ctx.sampleRate * 0.05;
+    const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1);
+    const noise = ctx.createBufferSource();
+    noise.buffer = buf;
+    const noiseGain = ctx.createGain();
+    noise.connect(noiseGain); noiseGain.connect(master);
+    noiseGain.gain.setValueAtTime(0.18, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+    noise.start(now); noise.stop(now + 0.1);
+
+    [120, 240, 360, 480].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(master);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+      osc.frequency.exponentialRampToValueAtTime(freq * 0.97, now + 2.0);
+      const vol = [0.28, 0.14, 0.08, 0.05][i];
+      gain.gain.setValueAtTime(0.0, now);
+      gain.gain.linearRampToValueAtTime(vol, now + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 4.0);
+      osc.start(now); osc.stop(now + 4.2);
+    });
+
+  } else if (type === 'chime') {
+    // Soft nefes — birden fazla ting art arda
+    const notes = [1760, 2093, 2349];
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(master);
+      osc.type = 'sine';
+      const t = now + i * 0.18;
+      osc.frequency.setValueAtTime(freq, t);
+      gain.gain.setValueAtTime(0.0, t);
+      gain.gain.linearRampToValueAtTime(0.22, t + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 1.2);
+      osc.start(t); osc.stop(t + 1.3);
+    });
+  }
+}
+
+function playTransitionSound() {
+  if (!soundEnabled) return;
+  try { playSoundType(soundType); } catch(e) { console.warn('Ses çalınamadı:', e); }
+}
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  localStorage.setItem('divan_sound', soundEnabled ? 'on' : 'off');
+  updateSoundToggleUI();
+  if (soundEnabled) playTransitionSound(); // Açınca önizle
+}
+
+function updateSoundToggleUI() {
+  const btn = document.getElementById('soundToggle');
+  if (soundEnabled) {
+    btn.textContent = '🔔 Açık';
+    btn.classList.add('on');
+  } else {
+    btn.textContent = '🔇 Kapalı';
+    btn.classList.remove('on');
+  }
+}
+
+function onSoundChange() {
+  soundType = document.getElementById('soundSelect').value;
+  localStorage.setItem('divan_sound_type', soundType);
+}
+
+function previewSound() {
+  try { playSoundType(document.getElementById('soundSelect').value); }
+  catch(e) { console.warn('Önizleme başarısız:', e); }
+}
+
+// ── YARDIMCI FONKSİYONLAR ──
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function minutesToHHMM(m) {
+  const total = ((m % 1440) + 1440) % 1440;
+  return pad(Math.floor(total / 60)) + ':' + pad(total % 60);
+}
+
+function parseHHMM(str) {
+  const parts = str.split(':');
+  if (parts.length !== 2) return null;
+  const h = parseInt(parts[0]), m = parseInt(parts[1]);
+  if (isNaN(h) || isNaN(m) || h < 0 || h > 23 || m < 0 || m > 59) return null;
+  return h * 60 + m;
+}
+
+function nowMinutes() {
+  const n = new Date();
+  return n.getHours() * 60 + n.getMinutes();
+}
+
+function getPersonaKey(colIdx, perIdx) {
+  return `col${colIdx}_per${perIdx}`;
+}
+
+// ── ARAYÜZ OLUŞTURMA ──
+function buildUI() {
+  const container = document.getElementById('columnsContainer');
+  container.innerHTML = '';
+
+  COLUMNS.forEach((col, ci) => {
+    const colEl = document.createElement('div');
+    colEl.className = 'column';
+
+    colEl.innerHTML = `
+      <div class="column-header">
+        <div class="column-title">${col.title}</div>
+        <div class="column-subtitle">${col.subtitle}</div>
+      </div>
+    `;
+
+    col.personas.forEach((p, pi) => {
+      const key = getPersonaKey(ci, pi);
+      const task = tasks[key] || '';
+      const row = document.createElement('div');
+      row.className = 'persona-row';
+      row.id = `row_${key}`;
+
+      const timeStr = startMinutes !== null
+        ? minutesToHHMM(startMinutes + p.offset)
+        : '--:--';
+
+      row.innerHTML = `
+        <div class="persona-inner">
+          <span class="persona-time" id="time_${key}">${timeStr}</span>
+          <div class="persona-name-wrapper">
+            <span class="persona-line left"></span>
+            <span class="persona-name">${p.name}</span>
+            <span class="persona-line right"></span>
+          </div>
+          <button class="edit-btn" onclick="openSheet('${key}', '${p.name.replace(/'/g,"\\'")}')">✎</button>
+        </div>
+        <div class="persona-task-preview" id="preview_${key}">${task || ''}</div>
+        <div class="row-countdown" id="rowcd_${key}" style="display:none"></div>
+      `;
+
+      colEl.appendChild(row);
+    });
+
+    container.appendChild(colEl);
+  });
+}
+
+// ── CANLI GÜNCELLEME ──
+function updateHighlights() {
+  const nowDate = new Date();
+  const nowSec = nowDate.getHours() * 3600 + nowDate.getMinutes() * 60 + nowDate.getSeconds();
+  const now = Math.floor(nowSec / 60); // dakika cinsinden
+
+  // Canlı saat
+  document.getElementById('liveClock').textContent =
+    pad(nowDate.getHours()) + ':' + pad(nowDate.getMinutes()) + ':' + pad(nowDate.getSeconds());
+
+  if (startMinutes === null) {
+    document.getElementById('bannerPersona').textContent = '—';
+    document.getElementById('bannerTime').textContent = 'Başlangıç saati girilmedi';
+    document.getElementById('bannerTask').textContent = '';
+    document.getElementById('bannerCountdown').textContent = '—';
+    document.getElementById('bannerCountdown').classList.remove('urgent');
+    return;
+  }
+
+  let activeFound = false;
+  let allPersonas = [];
+
+  COLUMNS.forEach((col, ci) => {
+    col.personas.forEach((p, pi) => {
+      allPersonas.push({ col: ci, per: pi, p, key: getPersonaKey(ci, pi) });
+    });
+  });
+
+  // Tüm satırlardaki countdown'ları gizle
+  allPersonas.forEach(item => {
+    const cd = document.getElementById(`rowcd_${item.key}`);
+    if (cd) cd.style.display = 'none';
+  });
+
+  allPersonas.forEach((item, idx) => {
+    const startMin = startMinutes + item.p.offset;
+    const nextItem = allPersonas[idx + 1];
+    const endMin = nextItem ? (startMinutes + nextItem.p.offset) : (startMin + 10);
+
+    const row = document.getElementById(`row_${item.key}`);
+    if (!row) return;
+
+    row.classList.remove('past', 'active');
+
+    const startWrapped = ((startMin % 1440) + 1440) % 1440;
+    const endWrapped = ((endMin % 1440) + 1440) % 1440;
+
+    let isActive = false;
+    if (startWrapped <= endWrapped) {
+      isActive = now >= startWrapped && now < endWrapped;
+    } else {
+      isActive = now >= startWrapped || now < endWrapped;
+    }
+
+    const isPast = !isActive && (
+      startWrapped <= endWrapped
+        ? now >= endWrapped
+        : (now >= endWrapped && now < startWrapped)
+    );
+
+    if (isActive) {
+      row.classList.add('active');
+      activeFound = true;
+
+      // Kalan saniye hesabı
+      const endWrappedSec = endWrapped * 60;
+      let remainSec = endWrappedSec - nowSec;
+      if (remainSec < 0) remainSec += 86400; // gece yarısı geçişi
+
+      const remM = Math.floor(remainSec / 60);
+      const remS = remainSec % 60;
+      const countdownStr = pad(remM) + ':' + pad(remS);
+      const isUrgent = remainSec <= 60;
+
+      // Banner zamanlayıcı
+      const bannerCd = document.getElementById('bannerCountdown');
+      bannerCd.textContent = countdownStr;
+      isUrgent ? bannerCd.classList.add('urgent') : bannerCd.classList.remove('urgent');
+
+      // Satır zamanlayıcı
+      const rowCd = document.getElementById(`rowcd_${item.key}`);
+      if (rowCd) {
+        rowCd.style.display = 'block';
+        rowCd.textContent = '⏳ ' + countdownStr;
+        isUrgent ? rowCd.classList.add('urgent') : rowCd.classList.remove('urgent');
+      }
+
+      // Banner diğer alanlar
+      document.getElementById('bannerPersona').textContent = item.p.name;
+      document.getElementById('bannerTime').textContent =
+        minutesToHHMM(startMin) + ' — ' + minutesToHHMM(endMin);
+      const task = tasks[item.key] || '';
+      document.getElementById('bannerTask').textContent = task || 'Görev emri verilmemiş';
+
+      // Scroll — sadece persona değiştiğinde
+      if (item.key !== lastActiveKey) {
+        lastActiveKey = item.key;
+        row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        playTransitionSound();
+      }
+    } else if (isPast) {
+      row.classList.add('past');
+    }
+  });
+
+  if (!activeFound) {
+    document.getElementById('bannerPersona').textContent = '—';
+    document.getElementById('bannerTime').textContent = 'Aktif persona yok';
+    document.getElementById('bannerTask').textContent = '';
+    document.getElementById('bannerCountdown').textContent = '—';
+    document.getElementById('bannerCountdown').classList.remove('urgent');
+  }
+}
+
+function updateTimes() {
+  if (startMinutes === null) return;
+  COLUMNS.forEach((col, ci) => {
+    col.personas.forEach((p, pi) => {
+      const key = getPersonaKey(ci, pi);
+      const el = document.getElementById(`time_${key}`);
+      if (el) el.textContent = minutesToHHMM(startMinutes + p.offset);
+    });
+  });
+}
+
+// ── BAŞLANGIÇ SAATİ UYGULAMA ──
+function applyStartTime() {
+  const val = document.getElementById('startTimeInput').value.trim();
+  const parsed = parseHHMM(val);
+  if (parsed === null) {
+    alert('Lütfen geçerli bir saat girin (örn: 10:15)');
+    return;
+  }
+  startMinutes = parsed;
+  localStorage.setItem('divan_start', String(startMinutes));
+  lastActiveKey = null; // Yeni başlangıç saatinde scroll bir kez çalışsın
+  updateTimes();
+  updateHighlights();
+}
+
+// ── DÜZENLEME MODALİ ──
+function openSheet(key, name) {
+  editingKey = key;
+  document.getElementById('sheetPersonaName').textContent = name;
+  document.getElementById('sheetTextarea').value = tasks[key] || '';
+  document.getElementById('modalOverlay').classList.add('open');
+  document.getElementById('bottomSheet').classList.add('open');
+  setTimeout(() => document.getElementById('sheetTextarea').focus(), 400);
+}
+
+function closeSheet() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.getElementById('bottomSheet').classList.remove('open');
+  editingKey = null;
+}
+
+function saveTask() {
+  if (!editingKey) return;
+  const val = document.getElementById('sheetTextarea').value.trim();
+  tasks[editingKey] = val;
+  localStorage.setItem('divan_tasks', JSON.stringify(tasks));
+
+  // Preview güncelle
+  const preview = document.getElementById(`preview_${editingKey}`);
+  if (preview) preview.textContent = val;
+
+  // Banner güncelle (aktif ise)
+  const activeRow = document.querySelector('.persona-row.active');
+  if (activeRow && activeRow.id === `row_${editingKey}`) {
+    document.getElementById('bannerTask').textContent = val || 'Görev emri verilmemiş';
+  }
+
+  closeSheet();
+}
+
+// ── BAŞLANGIÇ ──
+(function init() {
+  // Önceki başlangıç saatini yükle
+  const saved = localStorage.getItem('divan_start');
+  if (saved !== null) {
+    startMinutes = parseInt(saved);
+    document.getElementById('startTimeInput').value = minutesToHHMM(startMinutes);
+  }
+
+  // Ses tercihlerini yükle
+  updateSoundToggleUI();
+  const savedSoundType = localStorage.getItem('divan_sound_type') || 'ting';
+  soundType = savedSoundType;
+  document.getElementById('soundSelect').value = savedSoundType;
+
+  buildUI();
+  updateTimes();
+  updateHighlights();
+
+  // Canlı saat (her saniye)
+  setInterval(updateHighlights, 1000);
+})();
+</script>
+</body>
+</html>
